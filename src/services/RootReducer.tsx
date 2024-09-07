@@ -16,7 +16,7 @@ const initialState: IIngredientsState = {
 };
 
 export const ingredientsSlice = createSlice({
-  name: 'ingredients',
+  name: 'r',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

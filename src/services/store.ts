@@ -1,4 +1,5 @@
 import rootReducer from './RootReducer';
+import constructorReducer from './ConstructorReducer';
 import { configureStore } from '@reduxjs/toolkit';
 
 import {
@@ -9,7 +10,8 @@ import {
 
 const store = configureStore({
   reducer: {
-    root: rootReducer
+    root: rootReducer,
+    constructorData: constructorReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
