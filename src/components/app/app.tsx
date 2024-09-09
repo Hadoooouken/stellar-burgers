@@ -12,6 +12,7 @@ import {
 } from '@pages';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { getIngredients } from '../../services/RootReducer';
+import { getFeeds } from '../../services/FeedSlice';
 import { useDispatch } from '../../services/store';
 
 import '../../index.css';
@@ -25,6 +26,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
+    dispatch(getFeeds());
   }, []);
 
   return (
@@ -37,15 +39,12 @@ const App = () => {
         <Route
           path='/feed/:number'
           element={
-            <Modal title='rerer' onClose={() => {}}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title='rerer' onClose={() => {}}>
+            <Modal
+              title='Лента заказов'
+              onClose={() => {
+                navigate('/feed');
+              }}
+            >
               <OrderInfo />
             </Modal>
           }

@@ -1,5 +1,7 @@
 import rootReducer from './RootReducer';
 import constructorReducer from './ConstructorReducer';
+import FeedSlice from './FeedSlice';
+
 import { configureStore } from '@reduxjs/toolkit';
 
 import {
@@ -11,7 +13,8 @@ import {
 const store = configureStore({
   reducer: {
     root: rootReducer,
-    constructorData: constructorReducer
+    constructorData: constructorReducer,
+    feed: FeedSlice
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
