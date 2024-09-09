@@ -1,5 +1,5 @@
 import rootReducer from './RootReducer';
-import constructorReducer from './ConstructorReducer';
+import constructorReducer from './ConstructorSlice';
 import FeedSlice from './FeedSlice';
 
 import { configureStore } from '@reduxjs/toolkit';
