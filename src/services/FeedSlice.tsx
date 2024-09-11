@@ -37,6 +37,8 @@ const feedSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(getFeeds.fulfilled, (state, action) => {
+        //логируем
+        console.log('API response:', action.payload);
         state.loading = false;
         state.orders = action.payload.orders;
         state.total = action.payload.total;

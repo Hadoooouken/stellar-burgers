@@ -1,20 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '@api';
+import { orderBurgerApi, getOrdersApi } from '@api';
 import { TOrder } from '@utils-types';
 
 export interface IOrderState {
   order: TOrder | null;
+  ordersHistory: TOrder[] | null; // Массив для истории заказов
   orderRequest: boolean;
   orderFailed: boolean;
+  ordersHistoryRequest: boolean; // Запрос истории заказов
+  ordersHistoryFailed: boolean; // Ошибка запроса истории заказов
 }
 
 const initialState: IOrderState = {
   order: null,
+  ordersHistory: null, // Изначально история заказов пустая
   orderRequest: false,
-  orderFailed: false
+  orderFailed: false,
+  ordersHistoryRequest: false,
+  ordersHistoryFailed: false
 };
 
-// Создаем асинхронное действие для создания заказа
+// Асинхронное действие для создания заказа
 export const createOrder = createAsyncThunk<TOrder, string[]>(
   'order/create',
   async (ingredients: string[], { rejectWithValue }) => {
@@ -27,11 +33,23 @@ export const createOrder = createAsyncThunk<TOrder, string[]>(
   }
 );
 
+// Асинхронное действие для получения истории заказов
+export const fetchUserOrders = createAsyncThunk<TOrder[]>(
+  'order/fetchUserOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      const orders = await getOrdersApi(); // Получаем заказы
+      return orders;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    // Добавляем редьюсер для закрытия модального окна
     closeModal(state) {
       state.order = null;
     }
@@ -49,11 +67,22 @@ const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state) => {
         state.orderFailed = true;
         state.orderRequest = false;
+      })
+      // Добавляем обработку экшенов для истории заказов
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.ordersHistoryRequest = true;
+        state.ordersHistoryFailed = false;
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.ordersHistory = action.payload; // Сохраняем полученные заказы
+        state.ordersHistoryRequest = false;
+      })
+      .addCase(fetchUserOrders.rejected, (state) => {
+        state.ordersHistoryFailed = true;
+        state.ordersHistoryRequest = false;
       });
   }
 });
 
-// Экспортируем действие для закрытия модального окна
 export const { closeModal } = orderSlice.actions;
-
 export default orderSlice.reducer;
