@@ -1,15 +1,100 @@
+// import {
+//   getUserApi,
+//   TUserResponse,
+//   TRegisterData,
+//   TAuthResponse,
+//   TLoginData,
+//   registerUserApi,
+//   loginUserApi
+// } from '@api';
+// import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// import { TUser } from '@utils-types';
+// import { setCookie } from '../utils/cookie';
+
+// export interface IUserState {
+//   user: TUser | null;
+//   isAuth: boolean;
+//   loading: boolean;
+//   error?: string | null;
+// }
+
+// const initialState: IUserState = {
+//   user: null,
+//   isAuth: false,
+//   loading: false,
+//   error: ''
+// };
+
+// const userSlice = createSlice({
+//   name: 'user',
+//   initialState,
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(getUser.pending, (state) => {
+//         state.loading = true;
+//         state.error = '';
+//       })
+//       .addCase(getUser.rejected, (state, action) => {
+//         state.loading = false;
+//       })
+//       .addCase(getUser.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.user = action.payload.user;
+//       })
+//       .addCase(loginUser.pending, (state) => {
+//         state.loading = true;
+//         state.error = '';
+//       })
+//       .addCase(loginUser.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.isAuth = true;
+//       })
+//       .addCase(loginUser.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.error.message;
+//       });
+//   }
+// });
+
+// export const getUser = createAsyncThunk<TUserResponse>('user', async () =>
+//   getUserApi()
+// );
+
+// export const registerUser = createAsyncThunk<TUserResponse, TRegisterData>(
+//   'user/register',
+//   async (data) => registerUserApi(data)
+// );
+
+// export const loginUser = createAsyncThunk(
+//   'user/loginUser',
+//   async ({ email, password }: Omit<TRegisterData, 'name'>) => {
+//     const data = await loginUserApi({ email, password });
+
+//     setCookie('accessToken', data.accessToken);
+//     localStorage.setItem('refreshToken', data.refreshToken);
+//     return data.user;
+//   }
+// );
+
+// // Action creators are generated for each case reducer function
+// export const {} = userSlice.actions;
+
+// export default userSlice.reducer;
+
+// userSlice.ts
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   getUserApi,
   TUserResponse,
   TRegisterData,
-  TAuthResponse,
-  TLoginData,
   registerUserApi,
-  loginUserApi
+  loginUserApi,
+  updateUserApi,
+  logoutApi
 } from '@api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { deleteCookie, setCookie } from '../utils/cookie'; // Импортируем функцию для удаления куки
 import { TUser } from '@utils-types';
-import { setCookie } from '../utils/cookie';
 
 export interface IUserState {
   user: TUser | null;
@@ -25,40 +110,10 @@ const initialState: IUserState = {
   error: ''
 };
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getUser.pending, (state) => {
-        state.loading = true;
-        state.error = '';
-      })
-      .addCase(getUser.rejected, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(getUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-      })
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.error = '';
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isAuth = true;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
-  }
-});
-
-export const getUser = createAsyncThunk<TUserResponse>('user', async () =>
-  getUserApi()
+// Async Thunks
+export const getUser = createAsyncThunk<TUserResponse>(
+  'user/getUser',
+  async () => getUserApi()
 );
 
 export const registerUser = createAsyncThunk<TUserResponse, TRegisterData>(
@@ -77,7 +132,93 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Action creators are generated for each case reducer function
-export const {} = userSlice.actions;
+export const updateUser = createAsyncThunk<TUser, Partial<TRegisterData>>(
+  'user/updateUser',
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await updateUserApi(data);
+      return response.user;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Ошибка обновления пользователя');
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'user/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutApi();
+      deleteCookie('accessToken');
+      localStorage.removeItem('refreshToken');
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Ошибка выхода из системы');
+    }
+  }
+);
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuth = true;
+      })
+
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuth = true;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuth = false;
+        state.user = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  }
+});
 
 export default userSlice.reducer;

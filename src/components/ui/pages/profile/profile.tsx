@@ -1,9 +1,7 @@
-import { FC } from 'react';
-
+import { FC, useState } from 'react';
 import { Button, Input } from '@zlden/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import commonStyles from '../common.module.css';
-
 import { ProfileUIProps } from './type';
 import { ProfileMenu } from '@components';
 
@@ -14,16 +12,30 @@ export const ProfileUI: FC<ProfileUIProps> = ({
   handleSubmit,
   handleCancel,
   handleInputChange
-}) => (
-  <main className={`${commonStyles.container}`}>
-    <div className={`mt-30 mr-15 ${styles.menu}`}>
-      <ProfileMenu />
-    </div>
-    <form
-      className={`mt-30 ${styles.form} ${commonStyles.form}`}
-      onSubmit={handleSubmit}
-    >
-      <>
+}) => {
+  const [isEditing, setIsEditing] = useState({
+    name: false,
+    email: false,
+    password: false
+  });
+
+  const handleIconClick = (
+    e: React.MouseEvent,
+    field: keyof typeof isEditing
+  ) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  return (
+    <main className={`${commonStyles.container}`}>
+      <div className={`mt-30 mr-15 ${styles.menu}`}>
+        <ProfileMenu />
+      </div>
+      <form
+        className={`mt-30 ${styles.form} ${commonStyles.form}`}
+        onSubmit={handleSubmit}
+      >
         <div className='pb-6'>
           <Input
             type={'text'}
@@ -35,6 +47,8 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={!isEditing.name}
+            onIconClick={(e) => handleIconClick(e, 'name')}
           />
         </div>
         <div className='pb-6'>
@@ -48,6 +62,8 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={!isEditing.email}
+            onIconClick={(e) => handleIconClick(e, 'email')}
           />
         </div>
         <div className='pb-6'>
@@ -61,6 +77,8 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={!isEditing.password}
+            onIconClick={(e) => handleIconClick(e, 'password')}
           />
         </div>
         {isFormChanged && (
@@ -85,7 +103,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             {updateUserError}
           </p>
         )}
-      </>
-    </form>
-  </main>
-);
+      </form>
+    </main>
+  );
+};
