@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { orderBurgerApi, getOrdersApi } from '@api';
 import { TOrder } from '@utils-types';
+import { resetConstructor } from '../ConstructorSlice';
 
 export interface IOrderState {
   order: TOrder | null;
@@ -23,9 +24,11 @@ const initialState: IOrderState = {
 // Асинхронное действие для создания заказа
 export const createOrder = createAsyncThunk<TOrder, string[]>(
   'order/create',
-  async (ingredients: string[], { rejectWithValue }) => {
+  async (ingredients: string[], { dispatch, rejectWithValue }) => {
     try {
       const response = await orderBurgerApi(ingredients);
+      // Reset constructor on successful order
+      dispatch(resetConstructor());
       return response.order;
     } catch (error) {
       return rejectWithValue(error);
@@ -68,7 +71,7 @@ const orderSlice = createSlice({
         state.orderFailed = true;
         state.orderRequest = false;
       })
-      // Добавляем обработку экшенов для истории заказов
+      // Обработка экшенов для истории заказов
       .addCase(fetchUserOrders.pending, (state) => {
         state.ordersHistoryRequest = true;
         state.ordersHistoryFailed = false;

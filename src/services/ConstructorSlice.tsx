@@ -25,7 +25,6 @@ const constructorSlice = createSlice({
       const index = state.ingredients.findIndex(
         (item) => item._id === action.payload._id
       );
-
       if (index !== -1) {
         state.ingredients.splice(index, 1);
       }
@@ -45,17 +44,22 @@ const constructorSlice = createSlice({
         state.ingredients.splice(index, 1);
         state.ingredients.splice(index + 1, 0, ingredient);
       }
+    },
+   
+    resetConstructor: (state) => {
+      state.bun = null;
+      state.ingredients = [];
     }
   }
 });
 
-// Action creators are generated for each case reducer function
 export const {
   addBun,
   addIngredient,
   removeIngredient,
   moveIngredientUp,
-  moveIngredientDown
+  moveIngredientDown,
+  resetConstructor
 } = constructorSlice.actions;
 
 export default constructorSlice.reducer;

@@ -9,7 +9,7 @@ export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(
     (state: RootState) => state.constructorData
   );
-  const { orderRequest, order, orderFailed } = useSelector(
+  const { orderRequest, order } = useSelector(
     (state: RootState) => state.order
   );
 
