@@ -8,7 +8,7 @@ import {
   updateUserApi,
   logoutApi
 } from '@api';
-import { deleteCookie, setCookie } from '../utils/cookie'; // Импортируем функцию для удаления куки
+import { deleteCookie, setCookie } from '../../utils/cookie'; // Импортируем функцию для удаления куки
 import { TUser } from '@utils-types';
 
 export interface IUserState {
@@ -22,7 +22,7 @@ const initialState: IUserState = {
   isAuthorized: false,
   user: null,
   loading: false,
-  error: null
+  error: ''
 };
 
 // Async Thunks
@@ -80,11 +80,9 @@ const userSlice = createSlice({
     builder
       .addCase(getUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -94,7 +92,7 @@ const userSlice = createSlice({
 
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -109,7 +107,7 @@ const userSlice = createSlice({
 
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -122,7 +120,7 @@ const userSlice = createSlice({
 
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;

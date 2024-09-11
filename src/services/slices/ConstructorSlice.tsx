@@ -12,7 +12,7 @@ const initialState: IConstructorState = {
 };
 
 const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'constructorData',
   initialState,
   reducers: {
     addBun: (state, action) => {

@@ -1,8 +1,9 @@
 import React, { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { loginUser } from '../../services/UserSlice';
+import { loginUser } from '../../services/slices/UserSlice';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { cache } from 'webpack';
 
 export const Login: FC = () => {
   const dispatch = useDispatch();
@@ -15,11 +16,17 @@ export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    await dispatch(loginUser({ email, password }));
-    const from = (location.state as any)?.from?.pathname || '/';
-    navigate(from, { replace: true });
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then((data) => {
+        const from = (location.state as any)?.from?.pathname || '/';
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
   };
 
   if (isAuthorized) {

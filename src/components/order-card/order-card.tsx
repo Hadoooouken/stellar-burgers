@@ -12,13 +12,13 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
 
   const ingredients: TIngredient[] = useSelector(
-    (state) => state.root.ingredients
+    (state) => state.ingredients.ingredients
   );
 
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 
-    const ingredientsInfo = order.ingredients.reduce(
+    const ingredientsInfo = order.ingredients?.reduce(
       (acc: TIngredient[], item: string) => {
         const ingredient = ingredients.find((ing) => ing._id === item);
         if (ingredient) return [...acc, ingredient];

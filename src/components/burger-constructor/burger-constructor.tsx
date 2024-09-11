@@ -1,17 +1,23 @@
 import { FC, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { BurgerConstructorUI } from '@ui';
-import { createOrder, closeModal } from '../../services/slices/orderSlice';
-import { RootState, AppDispatch } from '../../services/store';
+import { createOrder, closeModal } from '../../services/slices/OrderSlice';
+import { RootState, useDispatch, useSelector } from '../../services/store';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const constructorItems = useSelector(
     (state: RootState) => state.constructorData
   );
   const { orderRequest, order } = useSelector(
     (state: RootState) => state.order
   );
+  const isAuthorized = useSelector(
+    (state: RootState) => state.user.isAuthorized
+  );
+
+  console.log(constructorItems);
 
   const price = useMemo(() => {
     const bunPrice = constructorItems.bun ? constructorItems.bun.price * 2 : 0;
@@ -23,6 +29,10 @@ export const BurgerConstructor: FC = () => {
   }, [constructorItems]);
 
   const onOrderClick = () => {
+    if (!isAuthorized) {
+      navigate('/login');
+    }
+
     if (
       constructorItems.bun &&
       constructorItems.ingredients.length > 0 &&

@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { updateUser } from '../../services/UserSlice'; // Импорт экшена обновления
+import { updateUser } from '../../services/slices/UserSlice'; // Импорт экшена обновления
 import { ProfileUI } from '@ui-pages';
 import { TRegisterData } from '@api';
 
@@ -65,6 +65,7 @@ export const Profile: FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     setFormValue((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value

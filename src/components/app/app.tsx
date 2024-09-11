@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from '../../services/store';
-import { getIngredients } from '../../services/RootReducer';
-import { getFeeds } from '../../services/FeedSlice';
-import { getUser } from '../../services/UserSlice';
+import { getIngredients } from '../../services/slices/IngredientsSlice';
+import { getFeeds } from '../../services/slices/FeedSlice';
+import { getUser } from '../../services/slices/UserSlice';
 import ProtectedRoute from '../../components/protectedRoute/ProtectedRoute';
 import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
 

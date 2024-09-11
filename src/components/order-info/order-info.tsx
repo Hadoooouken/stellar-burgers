@@ -13,7 +13,7 @@ export const OrderInfo: FC = () => {
   );
 
   const ingredients: TIngredient[] = useSelector(
-    (state) => state.root.ingredients
+    (state) => state.ingredients.ingredients
   );
 
   /* Готовим данные для отображения */
@@ -26,7 +26,7 @@ export const OrderInfo: FC = () => {
       [key: string]: TIngredient & { count: number };
     };
 
-    const ingredientsInfo = orderData.ingredients.reduce(
+    const ingredientsInfo = orderData.ingredients?.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);

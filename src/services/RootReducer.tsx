@@ -1,47 +1,16 @@
-import { getIngredientsApi } from '@api';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { TIngredient } from '@utils-types';
+import { combineReducers } from '@reduxjs/toolkit';
+import constructorSlice from '../services/slices/ConstructorSlice';
+import feedSlice from '../services/slices/FeedSlice';
+import ingredientsSlice from '../services/slices/IngredientsSlice';
+import orderSlice from '../services/slices/OrderSlice';
+import userSlice from '../services/slices/UserSlice';
 
-export interface IIngredientsState {
-  ingredients: TIngredient[];
-  loading: boolean;
-  error: any;
-}
-
-const initialState: IIngredientsState = {
-  ingredients: [],
-  loading: false,
-  error: false
-};
-
-export const ingredientsSlice = createSlice({
-  name: 'ingridient',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getIngredients.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getIngredients.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(getIngredients.fulfilled, (state, action) => {
-        state.loading = false;
-        state.ingredients = action.payload;
-      });
-  }
+const rootReducer = combineReducers({
+  constructorData: constructorSlice,
+  feed: feedSlice,
+  ingredients: ingredientsSlice,
+  order: orderSlice,
+  user: userSlice
 });
 
-export const getIngredients = createAsyncThunk<TIngredient[]>(
-  'ingredients',
-  async () => getIngredientsApi()
-);
-
-// Action creators are generated for each case reducer function
-export const {} = ingredientsSlice.actions;
-
-export default ingredientsSlice.reducer;
+export default rootReducer;
