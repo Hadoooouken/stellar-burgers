@@ -1,6 +1,7 @@
 import rootReducer from './RootReducer';
 import constructorReducer from './ConstructorSlice';
 import FeedSlice from './FeedSlice';
+import orderSlice from './slices/orderSlice';
 
 import { configureStore } from '@reduxjs/toolkit';
 
@@ -16,7 +17,8 @@ const store = configureStore({
     root: rootReducer,
     constructorData: constructorReducer,
     feed: FeedSlice,
-    user: UserSlice
+    user: UserSlice,
+    order: orderSlice
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
