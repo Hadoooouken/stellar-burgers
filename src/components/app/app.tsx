@@ -1,5 +1,12 @@
 import { useEffect } from 'react';
 
+import { useDispatch, useSelector } from '../../services/store';
+import { getIngredients } from '../../services/RootReducer';
+import { getFeeds } from '../../services/FeedSlice';
+import { getUser } from '../../services/UserSlice';
+import ProtectedRoute from '../../components/protectedRoute/ProtectedRoute';
+import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
+
 import {
   ConstructorPage,
   Feed,
@@ -8,28 +15,23 @@ import {
   ResetPassword,
   Profile,
   ProfileOrders,
-  NotFound404
+  NotFound404,
+  ForgotPassword
 } from '@pages';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { getIngredients } from '../../services/RootReducer';
-import { getFeeds } from '../../services/FeedSlice';
-import { useDispatch } from '../../services/store';
-
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import '../../index.css';
 import styles from './app.module.css';
-
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { getUser } from '../../services/UserSlice';
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
   useEffect(() => {
     dispatch(getIngredients());
     dispatch(getFeeds());
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -41,12 +43,7 @@ const App = () => {
         <Route
           path='/feed/:number'
           element={
-            <Modal
-              title='Лента заказов'
-              onClose={() => {
-                navigate('/feed');
-              }}
-            >
+            <Modal title='Лента заказов' onClose={() => navigate('/feed')}>
               <OrderInfo />
             </Modal>
           }
@@ -54,22 +51,47 @@ const App = () => {
         <Route
           path='/ingredients/:id'
           element={
-            <Modal
-              title='Детали ингредиента'
-              onClose={() => {
-                navigate('/');
-              }}
-            >
+            <Modal title='Детали ингредиента' onClose={() => navigate('/')}>
               <IngredientDetails />
             </Modal>
           }
         />
 
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ResetPassword />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
+        {/* Защищённые маршруты */}
+        <Route element={<ProtectedRoute />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/orders' element={<ProfileOrders />} />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <Modal
+                title='Информация о заказе'
+                onClose={() => navigate('/profile/orders')}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+        </Route>
+
+        {/* Неавторизованные маршруты */}
+        <Route
+          path='/login'
+          element={!isAuthorized ? <Login /> : <Navigate to='/' />}
+        />
+        <Route
+          path='/register'
+          element={!isAuthorized ? <Register /> : <Navigate to='/' />}
+        />
+        <Route
+          path='/forgot-password'
+          element={!isAuthorized ? <ForgotPassword /> : <Navigate to='/' />}
+        />
+        <Route
+          path='/reset-password'
+          element={!isAuthorized ? <ResetPassword /> : <Navigate to='/' />}
+        />
+
         <Route path='*' element={<NotFound404 />} />
       </Routes>
     </div>

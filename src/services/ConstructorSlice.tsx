@@ -45,7 +45,7 @@ const constructorSlice = createSlice({
         state.ingredients.splice(index + 1, 0, ingredient);
       }
     },
-   
+
     resetConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
