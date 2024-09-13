@@ -6,7 +6,7 @@ import { CloseIcon } from '@zlden/react-developer-burger-ui-components';
 import { TModalUIProps } from './type';
 import { ModalOverlayUI } from '@ui';
 
-export const ModalUI: FC<TModalUIProps> = memo(
+export const ModalUI: FC<TModalUIProps> = memo<TModalUIProps>(
   ({ title, onClose, children }) => (
     <>
       <div className={styles.modal}>

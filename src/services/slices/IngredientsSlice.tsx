@@ -6,13 +6,13 @@ import { TIngredient } from '@utils-types';
 export interface IIngredientsState {
   ingredients: TIngredient[];
   loading: boolean;
-  error: any;
+  error?: string;
 }
 
 const initialState: IIngredientsState = {
   ingredients: [],
   loading: false,
-  error: false
+  error: ''
 };
 
 export const ingredientsSlice = createSlice({
@@ -23,7 +23,7 @@ export const ingredientsSlice = createSlice({
     builder
       .addCase(getIngredients.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = '';
       })
       .addCase(getIngredients.rejected, (state, action) => {
         state.loading = false;

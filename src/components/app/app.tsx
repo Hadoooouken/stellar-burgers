@@ -39,39 +39,16 @@ const App = () => {
 
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
+        <Route path='/ingredients/:id' element={<ConstructorPage />} />
+
         <Route path='/feed' element={<Feed />} />
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title='Лента заказов' onClose={() => navigate('/feed')}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal title='Детали ингредиента' onClose={() => navigate('/')}>
-              <IngredientDetails />
-            </Modal>
-          }
-        />
+        <Route path='/feed/:number' element={<Feed />} />
 
         {/* Защищённые маршруты */}
         <Route element={<ProtectedRoute />}>
           <Route path='/profile' element={<Profile />} />
           <Route path='/profile/orders' element={<ProfileOrders />} />
-          <Route
-            path='/profile/orders/:number'
-            element={
-              <Modal
-                title='Информация о заказе'
-                onClose={() => navigate('/profile/orders')}
-              >
-                <OrderInfo />
-              </Modal>
-            }
-          />
+          <Route path='/profile/orders/:number' element={<ProfileOrders />} />
         </Route>
 
         {/* Неавторизованные маршруты */}

@@ -4,7 +4,7 @@ import styles from './feed-info.module.css';
 
 import { FeedInfoUIProps, HalfColumnProps, TColumnProps } from './type';
 
-export const FeedInfoUI: FC<FeedInfoUIProps> = memo(
+export const FeedInfoUI: FC<FeedInfoUIProps> = memo<FeedInfoUIProps>(
   ({ feed, readyOrders, pendingOrders }) => {
     const { total, totalToday } = feed;
 

@@ -67,7 +67,7 @@ export const logoutUser = createAsyncThunk(
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка выхода из системы');
+      return rejectWithValue(error?.message || 'Ошибка выхода из системы');
     }
   }
 );

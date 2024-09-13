@@ -21,7 +21,7 @@ export const Login: FC = () => {
     dispatch(loginUser({ email, password }))
       .unwrap()
       .then((data) => {
-        const from = (location.state as any)?.from?.pathname || '/';
+        const from = location.state?.from?.pathname || '/';
         navigate(from, { replace: true });
       })
       .catch((err) => {

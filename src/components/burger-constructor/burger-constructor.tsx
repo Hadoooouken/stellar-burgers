@@ -3,11 +3,12 @@ import { BurgerConstructorUI } from '@ui';
 import { createOrder, closeModal } from '../../services/slices/OrderSlice';
 import { RootState, useDispatch, useSelector } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
+import { IConstructorState } from '../../services/slices/ConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const constructorItems = useSelector(
+  const constructorItems = useSelector<IConstructorState>(
     (state: RootState) => state.constructorData
   );
   const { orderRequest, order } = useSelector(
