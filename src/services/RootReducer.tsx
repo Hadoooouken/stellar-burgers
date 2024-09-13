@@ -2,7 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import constructorSlice from '../services/slices/ConstructorSlice';
 import feedSlice from '../services/slices/FeedSlice';
 import ingredientsSlice from '../services/slices/IngredientsSlice';
-import orderSlice from './slices/OrderSlice';
+import orderSlice from './slices/OrdeUserSlice';
 import userSlice from '../services/slices/UserSlice';
 
 const rootReducer = combineReducers({
