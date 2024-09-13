@@ -104,13 +104,33 @@ type TNewOrderResponse = TServerResponse<{
   name: string;
 }>;
 
-export const orderBurgerApi = (data: string[]) =>
-  fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
+// export const orderBurgerApi = (data: string[]) =>
+//   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json;charset=utf-8',
+//       authorization: getCookie('accessToken')
+//     } as HeadersInit,
+//     body: JSON.stringify({
+//       ingredients: data
+//     })
+//   }).then((data) => {
+//     if (data?.success) return data;
+//     return Promise.reject(data);
+//   });
+
+export const orderBurgerApi = (data: string[]) => {
+  const accessToken = getCookie('accessToken');
+  if (!accessToken) {
+    return Promise.reject(new Error('No access token found'));
+  }
+
+  return fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken')
-    } as HeadersInit,
+      authorization: accessToken
+    },
     body: JSON.stringify({
       ingredients: data
     })
@@ -118,6 +138,7 @@ export const orderBurgerApi = (data: string[]) =>
     if (data?.success) return data;
     return Promise.reject(data);
   });
+};
 
 type TOrderResponse = TServerResponse<{
   orders: TOrder[];

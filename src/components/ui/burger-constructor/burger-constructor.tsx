@@ -20,7 +20,6 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
 }) => {
   // Обработчик закрытия модального окна
   const handleClose = () => {
-    console.log('Close button clicked');
     closeOrderModal();
   };
 

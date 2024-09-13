@@ -65,7 +65,6 @@ export const Profile: FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setFormValue((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value

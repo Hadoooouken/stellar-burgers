@@ -17,8 +17,6 @@ export const BurgerConstructor: FC = () => {
     (state: RootState) => state.user.isAuthorized
   );
 
-  console.log(constructorItems);
-
   const price = useMemo(() => {
     const bunPrice = constructorItems.bun ? constructorItems.bun.price * 2 : 0;
     const ingredientsPrice = constructorItems.ingredients.reduce(

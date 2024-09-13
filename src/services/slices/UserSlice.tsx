@@ -8,7 +8,7 @@ import {
   updateUserApi,
   logoutApi
 } from '@api';
-import { deleteCookie, setCookie } from '../../utils/cookie'; // Импортируем функцию для удаления куки
+import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TUser } from '@utils-types';
 
 export interface IUserState {

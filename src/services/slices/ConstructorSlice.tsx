@@ -1,9 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { TIngredient } from '@utils-types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { nanoid } from 'nanoid';
 
 export interface IConstructorState {
   bun: TIngredient | null;
-  ingredients: TIngredient[];
+  ingredients: TConstructorIngredient[];
 }
 
 const initialState: IConstructorState = {
@@ -15,21 +16,25 @@ const constructorSlice = createSlice({
   name: 'constructorData',
   initialState,
   reducers: {
-    addBun: (state, action) => {
+    addBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
     },
-    addIngredient: (state, action) => {
-      state.ingredients = [...state.ingredients, action.payload];
-    },
-    removeIngredient: (state, action) => {
-      const index = state.ingredients.findIndex(
-        (item) => item._id === action.payload._id
-      );
-      if (index !== -1) {
-        state.ingredients.splice(index, 1);
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        console.log('тест id:', action.payload);
+        state.ingredients.push(action.payload);
+      },
+      prepare: (ingredient: TIngredient) => {
+        const id = nanoid();
+        return { payload: { ...ingredient, id } };
       }
     },
-    moveIngredientUp: (state, action) => {
+    removeIngredient: (state, action: PayloadAction<{ id: string }>) => {
+      state.ingredients = state.ingredients.filter(
+        (item) => item.id !== action.payload.id
+      );
+    },
+    moveIngredientUp: (state, action: PayloadAction<number>) => {
       const index = action.payload;
       if (index > 0) {
         const ingredient = state.ingredients[index];
@@ -37,7 +42,7 @@ const constructorSlice = createSlice({
         state.ingredients.splice(index - 1, 0, ingredient);
       }
     },
-    moveIngredientDown: (state, action) => {
+    moveIngredientDown: (state, action: PayloadAction<number>) => {
       const index = action.payload;
       if (index < state.ingredients.length - 1) {
         const ingredient = state.ingredients[index];
@@ -45,7 +50,6 @@ const constructorSlice = createSlice({
         state.ingredients.splice(index + 1, 0, ingredient);
       }
     },
-
     resetConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
