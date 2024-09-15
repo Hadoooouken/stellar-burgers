@@ -9,9 +9,7 @@ import { Modal, OrderInfo } from '@components';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const ProfileOrders: FC = () => {
-  const { number } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { ordersHistory, ordersHistoryRequest, ordersHistoryFailed } =
     useSelector((state: RootState) => state.order);
@@ -31,11 +29,6 @@ export const ProfileOrders: FC = () => {
   return (
     <>
       <ProfileOrdersUI orders={ordersHistory || []} />;
-      {number && (
-        <Modal title={`#${number}`} onClose={() => navigate('/profile/orders')}>
-          <OrderInfo />
-        </Modal>
-      )}
     </>
   );
 };

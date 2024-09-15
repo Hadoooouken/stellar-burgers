@@ -9,8 +9,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { number } = useParams();
   const orders: TOrder[] = useSelector((state) => state.feed.orders);
   const loading: boolean = useSelector((state) => state.feed.loading);
 
@@ -26,11 +24,6 @@ export const Feed: FC = () => {
           dispatch(getFeeds());
         }}
       />
-      {number && (
-        <Modal title={`#${number}`} onClose={() => navigate('/feed')}>
-          <OrderInfo />
-        </Modal>
-      )}
     </>
   );
 };

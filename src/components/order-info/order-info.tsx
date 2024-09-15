@@ -7,7 +7,6 @@ import { useSelector } from '../../services/store';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  console.log('Order number from URL:', number);
 
   const orderData = useSelector((state) =>
     state.feed.orders.find((item) => item.number === Number(number))
@@ -16,9 +15,6 @@ export const OrderInfo: FC = () => {
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.ingredients
   );
-
-  console.log('orderData:', orderData);
-  console.log('ingredients:', ingredients);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

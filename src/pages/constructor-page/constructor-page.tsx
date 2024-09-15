@@ -31,12 +31,6 @@ export const ConstructorPage: FC = () => {
           </div>
         </main>
       )}
-
-      {id && (
-        <Modal title='Детали ингредиента' onClose={() => navigate('/')}>
-          <IngredientDetails />
-        </Modal>
-      )}
     </>
   );
 };

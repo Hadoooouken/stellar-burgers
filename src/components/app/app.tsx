@@ -4,8 +4,15 @@ import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/IngredientsSlice';
 import { getFeeds } from '../../services/slices/FeedSlice';
 import { getUser } from '../../services/slices/UserSlice';
-import ProtectedRoute from '../../components/protectedRoute/ProtectedRoute';
-import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
+import { ProtectedRoute } from '../../components/protectedRoute/ProtectedRoute';
+import {
+  Navigate,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  useMatch
+} from 'react-router-dom';
 
 import {
   ConstructorPage,
@@ -25,7 +32,14 @@ import styles from './app.module.css';
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backgroundLocation = location.state?.background;
   const isAuthorized = useSelector((state) => state.user.isAuthorized);
+
+  const feedNumber = useMatch('/feed/:number')?.params.number;
+  const profileNumber = useMatch('/profile/orders/:number')?.params.number;
+
+  const orderId = feedNumber || profileNumber;
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -37,40 +51,151 @@ const App = () => {
     <div className={styles.app}>
       <AppHeader />
 
-      <Routes>
+      <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
-        <Route path='/ingredients/:id' element={<ConstructorPage />} />
 
         <Route path='/feed' element={<Feed />} />
-        <Route path='/feed/:number' element={<Feed />} />
+
+        <Route
+          path='/feed/:number'
+          element={
+            <div className={styles.detailPageWrap}>
+              <p className={`text text_type_main-large ${styles.detailHeader}`}>
+                #{String(orderId).padStart(6, '0')}
+              </p>
+              <OrderInfo />
+            </div>
+          }
+        />
+
+        <Route
+          path='/ingredients/:id'
+          element={
+            <div className={styles.detailPageWrap}>
+              <p className={`text text_type_main-large ${styles.detailHeader}`}>
+                Детали ингредиента
+              </p>
+
+              <IngredientDetails />
+            </div>
+          }
+        />
 
         {/* Защищённые маршруты */}
-        <Route element={<ProtectedRoute />}>
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/profile/orders' element={<ProfileOrders />} />
-          <Route path='/profile/orders/:number' element={<ProfileOrders />} />
-        </Route>
+
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute>
+              <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <div className={styles.detailPageWrap}>
+                <p
+                  className={`text text_type_main-large ${styles.detailHeader}`}
+                >
+                  #{String(orderId).padStart(6, '0')}
+                </p>
+                <OrderInfo />
+              </div>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Неавторизованные маршруты */}
         <Route
           path='/login'
-          element={!isAuthorized ? <Login /> : <Navigate to='/' />}
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Login />
+            </ProtectedRoute>
+          }
         />
         <Route
           path='/register'
-          element={!isAuthorized ? <Register /> : <Navigate to='/' />}
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
         />
         <Route
           path='/forgot-password'
-          element={!isAuthorized ? <ForgotPassword /> : <Navigate to='/' />}
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
         />
         <Route
           path='/reset-password'
-          element={!isAuthorized ? <ResetPassword /> : <Navigate to='/' />}
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
         />
 
         <Route path='*' element={<NotFound404 />} />
       </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/feed/:number'
+            element={
+              <Modal
+                title={`#${String(orderId).padStart(6, '0')}`}
+                onClose={() => {
+                  navigate(backgroundLocation);
+                }}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+
+          <Route
+            path='ingredients/:id'
+            element={
+              <Modal
+                title='Детали ингредиента'
+                onClose={() => {
+                  navigate(backgroundLocation);
+                }}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <ProtectedRoute>
+                <Modal
+                  title={`#${String(orderId).padStart(6, '0')}`}
+                  onClose={() => navigate(backgroundLocation)}
+                >
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 };
