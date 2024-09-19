@@ -10,7 +10,7 @@ import styles from './order-card.module.css';
 import { OrderCardUIProps } from './type';
 import { OrderStatus } from '@components';
 
-export const OrderCardUI: FC<OrderCardUIProps> = memo(
+export const OrderCardUI: FC<OrderCardUIProps> = memo<OrderCardUIProps>(
   ({ orderInfo, maxIngredients, locationState }) => (
     <Link
       to={orderInfo.number.toString()}

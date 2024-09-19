@@ -1,15 +1,18 @@
+import styles from './constructor-page.module.css';
 import { useSelector } from '../../services/store';
 
-import styles from './constructor-page.module.css';
-
-import { BurgerIngredients } from '../../components';
+import { BurgerIngredients, IngredientDetails, Modal } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
-  const isIngredientsLoading = false;
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isIngredientsLoading = useSelector(
+    (state) => state.ingredients.loading
+  );
 
   return (
     <>

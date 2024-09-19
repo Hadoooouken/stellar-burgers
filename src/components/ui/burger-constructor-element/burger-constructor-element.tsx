@@ -5,7 +5,7 @@ import { BurgerConstructorElementUIProps } from './type';
 import { MoveButton } from '@zlden/react-developer-burger-ui-components';
 
 export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
-  memo(
+  memo<BurgerConstructorElementUIProps>(
     ({
       ingredient,
       index,
