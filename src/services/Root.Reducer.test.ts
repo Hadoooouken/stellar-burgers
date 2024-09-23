@@ -1,4 +1,4 @@
-import rootReducer from './RootReducer'; // Убедитесь, что путь правильный
+import rootReducer from './RootReducer'; 
 
 
 describe('rootReducer', () => {
