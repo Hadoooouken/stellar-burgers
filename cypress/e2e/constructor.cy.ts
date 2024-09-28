@@ -1,4 +1,10 @@
 describe('Constructor', () => {
+  const categoryBunSelector = '[data-testid=category-bun]';
+  const categoryMainSelector = '[data-testid=category-main]';
+  const categorySauceSelector = '[data-testid=category-sauce]';
+  const modalsSelector = '[id=modals]';
+  const buttonSelector = '[type=button]';
+
   beforeEach(() => {
     cy.viewport(3840, 2160);
     cy.visit('/');
@@ -22,7 +28,7 @@ describe('Constructor', () => {
   describe('Adding Ingredients to the burger constructor', () => {
     it('should add buns to the burger constructor', () => {
       cy.contains('Выберите булки').should('exist');
-      cy.get('[data-testid=category-bun]').contains('Добавить').click();
+      cy.get(categoryBunSelector).contains('Добавить').click();
       cy.wait(1000);
       cy.get('.constructor-element_pos_top')
         .contains('Флюоресцентная булка R2-D3')
@@ -31,12 +37,12 @@ describe('Constructor', () => {
 
     it('add ingredients to the burger constructor', () => {
       cy.contains('Выберите начинку').should('exist');
-      cy.get('[data-testid=category-main]').contains('Добавить').click();
+      cy.get(categoryMainSelector).contains('Добавить').click();
       cy.wait(1000);
       cy.get('.constructor-element')
         .contains('Говяжий метеорит (отбивная)')
         .should('exist');
-      cy.get('[data-testid=category-main]').contains('Добавить').click();
+      cy.get(categoryMainSelector).contains('Добавить').click();
       cy.wait(1000);
       cy.get('.constructor-element')
         .contains('Говяжий метеорит (отбивная)')
@@ -45,7 +51,7 @@ describe('Constructor', () => {
 
     it('add sauces to the burger constructor', () => {
       cy.contains('Выберите начинку').should('exist');
-      cy.get('[data-testid=category-sauce]').contains('Добавить').click();
+      cy.get(categorySauceSelector).contains('Добавить').click();
       cy.wait(1000);
       cy.get('.constructor-element')
         .contains('Соус с шипами Антарианского плоскоходца')
@@ -55,12 +61,12 @@ describe('Constructor', () => {
 
   describe('Ingredient Modal Window', () => {
     it('show display and close ingredient details', () => {
-      cy.get('[data-testid=category-bun] li').first().click();
+      cy.get(`${categoryBunSelector} li`).first().click();
       cy.wait(1000);
-      cy.get('[id=modals]')
+      cy.get(modalsSelector)
         .contains('Флюоресцентная булка R2-D3')
         .should('be.visible');
-      cy.get('[id=modals]').find('button').click().should('not.exist');
+      cy.get(modalsSelector).find('button').click().should('not.exist');
     });
   });
 
@@ -71,23 +77,23 @@ describe('Constructor', () => {
     });
 
     it('successfully create an order', () => {
-      cy.get('[data-testid=category-bun]').contains('Добавить').click();
+      cy.get(categoryBunSelector).contains('Добавить').click();
       cy.wait(1000);
-      cy.get('[data-testid=category-main]').contains('Добавить').click();
+      cy.get(categoryMainSelector).contains('Добавить').click();
       cy.wait(1000);
-      cy.get('[data-testid=category-main]').contains('Добавить').click();
+      cy.get(categoryMainSelector).contains('Добавить').click();
       cy.wait(1000);
-      cy.get('[data-testid=category-sauce]').contains('Добавить').click();
+      cy.get(categorySauceSelector).contains('Добавить').click();
       cy.wait(1000);
-      cy.get('[type=button]').contains('Оформить заказ').click();
+      cy.get(buttonSelector).contains('Оформить заказ').click();
 
       cy.wait('@createOrder', { timeout: 4000 })
         .its('response.statusCode')
         .should('eq', 200);
 
-      cy.get('[id=modals]').contains('111111').should('be.visible');
+      cy.get(modalsSelector).contains('111111').should('be.visible');
       cy.wait(1000);
-      cy.get('[id=modals]').find('button').click().should('not.exist');
+      cy.get(modalsSelector).find('button').click().should('not.exist');
 
       cy.get('[id=root]')
         .should('contain', 'Выберите булки')
@@ -100,9 +106,8 @@ describe('Constructor', () => {
       });
 
       cy.wait(1000);
-      cy.get('[type=button]').contains('Оформить заказ').click();
+      cy.get(buttonSelector).contains('Оформить заказ').click();
       cy.get('@alertStub').should('be.called');
-      console.log('Alert is about to be called');
       cy.get('@alertStub').should(
         'be.calledWith',
         'Выберите булки и начинки для оформления заказа'
