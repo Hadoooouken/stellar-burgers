@@ -104,21 +104,6 @@ type TNewOrderResponse = TServerResponse<{
   name: string;
 }>;
 
-// export const orderBurgerApi = (data: string[]) =>
-//   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json;charset=utf-8',
-//       authorization: getCookie('accessToken')
-//     } as HeadersInit,
-//     body: JSON.stringify({
-//       ingredients: data
-//     })
-//   }).then((data) => {
-//     if (data?.success) return data;
-//     return Promise.reject(data);
-//   });
-
 export const orderBurgerApi = (data: string[]) => {
   const accessToken = getCookie('accessToken');
   if (!accessToken) {

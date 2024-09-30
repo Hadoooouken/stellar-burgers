@@ -21,13 +21,17 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> =
       onTabClick
     }) => (
       <>
-        <section className={styles.burger_ingredients}>
+        <section
+          className={styles.burger_ingredients}
+          data-testid='burger-ingredients'
+        >
           <nav>
             <ul className={styles.menu}>
               <Tab
                 value='bun'
                 active={currentTab === 'bun'}
                 onClick={onTabClick}
+                data-testid='tab-bun'
               >
                 Булки
               </Tab>
@@ -35,6 +39,7 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> =
                 value='main'
                 active={currentTab === 'main'}
                 onClick={onTabClick}
+                data-testid='tab-main'
               >
                 Начинки
               </Tab>
@@ -42,6 +47,7 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> =
                 value='sauce'
                 active={currentTab === 'sauce'}
                 onClick={onTabClick}
+                data-testid='tab-sauce'
               >
                 Соусы
               </Tab>
@@ -53,18 +59,21 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> =
               titleRef={titleBunRef}
               ingredients={buns}
               ref={bunsRef}
+              data-testid='category-bun'
             />
             <IngredientsCategory
               title='Начинки'
               titleRef={titleMainRef}
               ingredients={mains}
               ref={mainsRef}
+              data-testid='category-main'
             />
             <IngredientsCategory
               title='Соусы'
               titleRef={titleSaucesRef}
               ingredients={sauces}
               ref={saucesRef}
+              data-testid='category-sauce'
             />
           </div>
         </section>
