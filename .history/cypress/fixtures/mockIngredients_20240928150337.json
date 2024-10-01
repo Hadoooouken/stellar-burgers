@@ -1,0 +1,26 @@
+
+{
+  "ingredients": [
+    {
+      "_id": "1",
+      "name": "Флюоресцентная булка R2-D3",
+      "type": "bun",
+      "price": 200,
+      "image": "link_to_image"
+    },
+    {
+      "_id": "2",
+      "name": "Мясо бессмертных моллюсков Protostomia",
+      "type": "main",
+      "price": 300,
+      "image": "link_to_image"
+    },
+    {
+      "_id": "3",
+      "name": "Соус традиционный галактический",
+      "type": "sauce",
+      "price": 150,
+      "image": "link_to_image"
+    }
+  ]
+}

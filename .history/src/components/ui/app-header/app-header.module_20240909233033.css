@@ -1,0 +1,30 @@
+/* Добавляем стили для ссылок */
+.link {
+  display: flex;
+  text-decoration: none;
+  color: var(
+    --text-inactive-color
+  ); /* Цвет по умолчанию для неактивной ссылки */
+}
+
+.link:visited {
+  color: var(--text-inactive-color); /* Цвет для посещенной ссылки */
+}
+
+.link:hover {
+  color: var(--text-primary-color); /* Цвет ссылки при наведении */
+  text-decoration: none; /* Убираем подчеркивание при наведении */
+}
+
+.link:active {
+  color: var(--text-primary-color); /* Цвет ссылки при нажатии */
+  text-decoration: none; /* Убираем подчеркивание при нажатии */
+}
+
+.link_active {
+  color: var(--text-primary-color); /* Цвет активной ссылки */
+}
+
+.link_active:visited {
+  color: var(--text-primary-color); /* Цвет для посещенной активной ссылки */
+}

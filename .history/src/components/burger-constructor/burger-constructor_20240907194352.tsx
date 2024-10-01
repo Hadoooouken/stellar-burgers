@@ -1,0 +1,42 @@
+import { FC, useMemo } from 'react';
+import { TConstructorIngredient } from '@utils-types';
+import { BurgerConstructorUI } from '@ui';
+import { useSelector } from 'src/services/store';
+
+export const BurgerConstructor: FC = () => {
+  const constructorItems = useSelector((state) => state.constructorData);
+
+  const orderRequest = false;
+
+  const orderModalData = null;
+
+  const onOrderClick = () => {
+    if (!constructorItems.bun || orderRequest) return;
+  };
+  const closeOrderModal = () => {};
+
+  const price = useMemo(() => {
+    // Определяем цену булочек, если они есть
+    const bunPrice = constructorItems.bun ? constructorItems.bun.price * 2 : 0;
+  
+    // Рассчитываем общую цену ингредиентов
+    const ingredientsPrice = constructorItems.ingredients.reduce(
+      (sum, ingredient) => sum + ingredient.price,
+      0
+    );
+  
+    // Возвращаем общую цену
+    return bunPrice + ingredientsPrice;
+  }, [constructorItems]);
+
+  return (
+    <BurgerConstructorUI
+      price={price}
+      orderRequest={orderRequest}
+      constructorItems={constructorItems}
+      orderModalData={orderModalData}
+      onOrderClick={onOrderClick}
+      closeOrderModal={closeOrderModal}
+    />
+  );
+};
