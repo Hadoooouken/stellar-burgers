@@ -21,7 +21,7 @@ describe('Order Slice', () => {
   });
 
   it('handle createOrder fulfilled', () => {
-    const order = { id: '123', ingredients: [] }; 
+    const order = { id: '123', ingredients: [] };
     const action = { type: createOrder.fulfilled.type, payload: order };
     const state = orderReducer(initialState, action);
     expect(state).toEqual({

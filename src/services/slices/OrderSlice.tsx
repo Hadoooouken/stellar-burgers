@@ -21,6 +21,7 @@ const initialState: IOrderState = {
   ordersHistoryFailed: false
 };
 
+// AsyncThunk для создания нового заказа
 export const createOrder = createAsyncThunk<TOrder, string[]>(
   'order/create',
   async (ingredients: string[], { dispatch, rejectWithValue }) => {
@@ -35,12 +36,28 @@ export const createOrder = createAsyncThunk<TOrder, string[]>(
   }
 );
 
+// AsyncThunk для получения истории заказов пользователя
 export const fetchUserOrders = createAsyncThunk<TOrder[]>(
   'order/fetchUserOrders',
   async (_, { rejectWithValue }) => {
     try {
       const orders = await getOrdersApi();
       return orders;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// AsyncThunk для получения заказа по номеру
+export const fetchOrderByNumber = createAsyncThunk<TOrder, number>(
+  'order/fetchOrderByNumber',
+  async (number, { rejectWithValue }) => {
+    try {
+      const orders = await getOrdersApi(); // Assuming this returns TOrder[]
+      const order = orders.find((order) => order.number === number);
+      if (!order) throw new Error('Order not found');
+      return order;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -57,6 +74,7 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Обработка создания заказа
       .addCase(createOrder.pending, (state) => {
         state.orderRequest = true;
         state.orderFailed = false;
@@ -70,15 +88,30 @@ const orderSlice = createSlice({
         state.orderRequest = false;
       })
 
+      // Обработка получения истории заказов
       .addCase(fetchUserOrders.pending, (state) => {
         state.ordersHistoryRequest = true;
         state.ordersHistoryFailed = false;
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.ordersHistory = action.payload; // Сохраняем полученные заказы
+        state.ordersHistory = action.payload;
         state.ordersHistoryRequest = false;
       })
       .addCase(fetchUserOrders.rejected, (state) => {
+        state.ordersHistoryFailed = true;
+        state.ordersHistoryRequest = false;
+      })
+
+      // Обработка получения заказа по номеру
+      .addCase(fetchOrderByNumber.pending, (state) => {
+        state.ordersHistoryRequest = true;
+        state.ordersHistoryFailed = false;
+      })
+      .addCase(fetchOrderByNumber.fulfilled, (state, action) => {
+        state.ordersHistory = [...(state.ordersHistory || []), action.payload];
+        state.ordersHistoryRequest = false;
+      })
+      .addCase(fetchOrderByNumber.rejected, (state) => {
         state.ordersHistoryFailed = true;
         state.ordersHistoryRequest = false;
       });

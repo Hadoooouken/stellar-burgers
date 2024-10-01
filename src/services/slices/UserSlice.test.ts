@@ -15,7 +15,7 @@ describe('User Slice', () => {
   });
 
   it('handle loginUser fulfilled', () => {
-    const user = { id: 'user123', email: 'test@test.com' }; 
+    const user = { id: 'user123', email: 'test@test.com' };
     const action = { type: loginUser.fulfilled.type, payload: user };
     const state = userReducer(initialState, action);
     expect(state).toEqual({

@@ -1,22 +1,34 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useParams } from 'react-router-dom';
-import { useSelector } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
+import { fetchOrderByNumber } from '../../services/slices/OrderSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
+  const dispatch = useDispatch();
 
-  const orderData = useSelector((state) =>
-    state.feed.orders.find((item) => item.number === Number(number))
+  // Получаем заказ как из глобальной ленты заказов, так и из истории заказов пользователя
+  const orderData = useSelector(
+    (state) =>
+      state.feed.orders.find((item) => item.number === Number(number)) ||
+      state.order.ordersHistory?.find((item) => item.number === Number(number))
   );
 
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.ingredients
   );
 
-  /* Готовим данные для отображения */
+  useEffect(() => {
+    if (!orderData) {
+      // Если заказ отсутствует в состоянии, загружаем его по номеру
+      dispatch(fetchOrderByNumber(Number(number)));
+    }
+  }, [orderData, number, dispatch]);
+
+  // Подготавливаем данные для отображения
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 

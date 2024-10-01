@@ -1,5 +1,4 @@
-import rootReducer from './RootReducer'; 
-
+import rootReducer from './RootReducer';
 
 describe('rootReducer', () => {
   it('should return initial state when called with undefined state and unknown action', () => {
@@ -8,10 +7,15 @@ describe('rootReducer', () => {
       constructorData: { bun: null, ingredients: [] },
       feed: { error: '', loading: false, orders: [], total: 0, totalToday: 0 },
       ingredients: { ingredients: [], loading: false, error: '' },
-      order: { order: null, orderFailed: false, orderRequest: false, ordersHistory: null, ordersHistoryFailed: false, ordersHistoryRequest: false },
-      user: { error: '', isAuthorized: false, loading: false, user: null },
+      order: {
+        order: null,
+        orderFailed: false,
+        orderRequest: false,
+        ordersHistory: null,
+        ordersHistoryFailed: false,
+        ordersHistoryRequest: false
+      },
+      user: { error: '', isAuthorized: false, loading: false, user: null }
     });
-    
   });
 });
-
