@@ -19,7 +19,7 @@ describe('ingredientsSlice reducer', () => {
     const newState = ingredientsReducer(initialState, action);
 
     expect(newState.loading).toBe(true);
-    expect(newState.error).toBe(''); 
+    expect(newState.error).toBe('');
   });
 
   it('set ingredients and loading to false on fulfilled', () => {
@@ -36,7 +36,7 @@ describe('ingredientsSlice reducer', () => {
 
     expect(newState.loading).toBe(false);
     expect(newState.ingredients).toEqual(mockIngredients);
-    expect(newState.error).toBe(''); 
+    expect(newState.error).toBe('');
   });
 
   it('set error and loading to false on rejected', () => {
