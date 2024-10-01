@@ -1,0 +1,6 @@
+node_modules
+.env
+.idea
+dist
+OrderSlice.test.ts
+OrderSlice.test.ts
